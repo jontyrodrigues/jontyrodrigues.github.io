@@ -20,9 +20,9 @@
 		var undoArray = [];
 		var displayType = 'symbol';
 		var fired = false;
-		var voicerate = 1;
+		var voicerate = 0.5;
 		var pitch = 0.85;
-		var voice = getVoices()[0];
+		
 
 		function initializise() {
 			historyArray = JSON.parse(localStorage.getItem('history')) ?? [];
@@ -96,9 +96,10 @@
 		};
 
 		function repeatCurrentSymbol() {
-			utterance = new SpeechSynthesisUtterance(namesArray[historyArray[historyArray.length - 1]]);
-			utterance.rate = 0.50;
-			utterance.pitch = 1.85;
+			let utterance = new SpeechSynthesisUtterance(namesArray[historyArray[historyArray.length - 1]]);
+			utterance.rate = voicerate;
+			utterance.pitch = pitch;
+			utterance.voice = voice;
 			speechSynthesis.speak(utterance);
 		}
 
@@ -202,6 +203,8 @@
 			return voices;
 		}
 
+		var voice = getVoices()[0];
+		
 		function getnumber() {
 			while (true) {
 				var x = Math.floor((Math.random() * 90));
