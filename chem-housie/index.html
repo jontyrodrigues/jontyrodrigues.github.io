@@ -20,6 +20,8 @@
 		var undoArray = [];
 		var displayType = 'symbol';
 		var fired = false;
+		var voicerate = 1;
+		var pitch = 0.85;
 
 		function initializise() {
 			historyArray = JSON.parse(localStorage.getItem('history')) ?? [];
@@ -205,8 +207,8 @@
 				if (!historyArray.includes(x)) {
 					historyArray.push(x);
 					let utterance = new SpeechSynthesisUtterance(namesArray[x]);
-					utterance.rate = 0.50;
-					utterance.pitch = 1.85;
+					utterance.rate = voicerate;
+					utterance.pitch = pitch;
 					speechSynthesis.speak(utterance);
 					speechSynthesis.speak(utterance);
 					document.getElementById("no").innerHTML = symbolArray[x];
