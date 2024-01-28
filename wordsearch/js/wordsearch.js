@@ -131,7 +131,7 @@ function makeGrid(number){
     wordlistGrid.appendChild(row);
     }
     // show the print dialog
-    window.print();
 }
 
+// window.print();
 
