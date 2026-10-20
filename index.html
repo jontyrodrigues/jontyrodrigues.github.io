@@ -1,151 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Jonty Rodrigues</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css">
+    <meta name="description" content="Jonty Rodrigues — full stack developer with a chemistry degree. Projects, experience and a few chemistry games.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f6f5f1;
+            --surface: #ffffff;
+            --surface-2: #efede7;
+            --text: #1c1b19;
+            --muted: #5f5c55;
+            --border: #e2dfd7;
+            --accent: #0f766e;
+            --accent-soft: #d6efec;
+            --tile-1: #0f766e;
+            --tile-2: #b45309;
+            --tile-3: #4338ca;
+            --shadow: 0 1px 2px rgba(28, 27, 25, .06), 0 8px 24px rgba(28, 27, 25, .06);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #121211;
+                --surface: #1b1b19;
+                --surface-2: #242421;
+                --text: #ecebe6;
+                --muted: #a3a097;
+                --border: #2e2d2a;
+                --accent: #5eead4;
+                --accent-soft: #123a36;
+                --tile-1: #14b8a6;
+                --tile-2: #f59e0b;
+                --tile-3: #818cf8;
+                --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+            }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font: 16px/1.6 "Inter", system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; }
+        h1, h2, h3, .brand, .tile { font-family: "Space Grotesk", "Inter", sans-serif; }
+
+        .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+        /* Nav */
+        header.nav {
+            position: sticky; top: 0; z-index: 10;
+            background: color-mix(in srgb, var(--bg) 85%, transparent);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        header.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+        .brand { font-weight: 700; font-size: 1.1rem; text-decoration: none; }
+        .brand span { color: var(--accent); }
+        .nav ul { display: flex; gap: 4px; list-style: none; }
+        .nav ul a {
+            display: block; padding: 6px 12px; border-radius: 8px;
+            text-decoration: none; color: var(--muted); font-size: .92rem; font-weight: 500;
+        }
+        .nav ul a:hover { color: var(--text); background: var(--surface-2); }
+
+        /* Hero */
+        .cover {
+            height: 220px; margin-top: 20px; border-radius: 18px;
+            background: url("/images/Abstract.jpg") center / cover, var(--surface-2);
+        }
+        .profile { display: flex; align-items: flex-end; gap: 20px; margin: -64px 0 0 28px; }
+        .profile img {
+            width: 136px; height: 136px; flex: none; border-radius: 50%; object-fit: cover;
+            border: 5px solid var(--bg); background: var(--surface-2);
+        }
+        .profile h1 { font-size: 2rem; line-height: 1.15; }
+        .profile p { color: var(--muted); font-weight: 500; }
+        .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0 28px; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px; border-radius: 999px; font-size: .9rem; font-weight: 600;
+            text-decoration: none; border: 1px solid var(--border); background: var(--surface);
+            transition: border-color .15s, transform .15s;
+        }
+        .btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+        .btn svg { width: 16px; height: 16px; }
+
+        /* Sections */
+        section { margin-top: 64px; }
+        section > h2 { font-size: 1.4rem; margin-bottom: 6px; }
+        section > .lede { color: var(--muted); margin-bottom: 20px; }
+        .about p { color: var(--muted); max-width: 64ch; margin-top: 10px; }
+
+        /* Project cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+        .card {
+            display: flex; flex-direction: column; gap: 14px;
+            padding: 20px; border-radius: 16px; text-decoration: none;
+            background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
+            transition: transform .15s, border-color .15s;
+        }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .card h3 { font-size: 1.1rem; }
+        .card p { color: var(--muted); font-size: .92rem; flex: 1; }
+        .card .go { font-size: .88rem; font-weight: 600; color: var(--accent); }
+        .card .tag {
+            align-self: flex-start; font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+            padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent);
+        }
+
+        /* Periodic-table style tile */
+        .tile {
+            position: relative; width: 64px; height: 64px; border-radius: 10px; color: #fff;
+            display: grid; place-items: center; font-size: 1.6rem; font-weight: 700;
+        }
+        .tile small { position: absolute; top: 4px; left: 7px; font-size: .62rem; font-weight: 500; opacity: .85; }
+        .tile-1 { background: var(--tile-1); }
+        .tile-2 { background: var(--tile-2); }
+        .tile-3 { background: var(--tile-3); }
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) .tile { color: #121211; }
+        }
+
+        /* Timeline */
+        .timeline { list-style: none; border-left: 2px solid var(--border); margin-left: 6px; }
+        .timeline li { position: relative; padding: 0 0 24px 24px; }
+        .timeline li:last-child { padding-bottom: 0; }
+        .timeline li::before {
+            content: ""; position: absolute; left: -7px; top: 7px; width: 12px; height: 12px;
+            border-radius: 50%; background: var(--bg); border: 2px solid var(--accent);
+        }
+        .timeline h3 { font-size: 1.05rem; }
+        .timeline .meta { color: var(--muted); font-size: .88rem; font-weight: 500; }
+        .timeline p { color: var(--muted); margin-top: 4px; }
+
+        /* Skills */
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+        .chips li {
+            padding: 4px 12px; border-radius: 999px; font-size: .88rem; font-weight: 500;
+            background: var(--surface); border: 1px solid var(--border);
+        }
+
+        footer { margin: 80px 0 40px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: .88rem; }
+
+        @media (max-width: 600px) {
+            .nav ul a { padding: 6px 8px; }
+            .cover { height: 150px; border-radius: 14px; }
+            .profile { flex-direction: column; align-items: flex-start; gap: 10px; margin: -52px 0 0 16px; }
+            .profile img { width: 104px; height: 104px; }
+            .profile h1 { font-size: 1.6rem; }
+            .links { margin-left: 16px; }
+            section { margin-top: 48px; }
+        }
+    </style>
 </head>
 
-<body class="bg-gray-200">
-    <div class="bg-gray-100">
-        <!-- make a navbar -->
-        <nav class="bg-white border-gray-200 dark:bg-gray-900">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="https://jontyrodrigues.github.io/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <!-- <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" /> -->
-                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">My Space</span>
-                </a>
-                <button data-collapse-toggle="navbar-default" type="button"
-                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                    aria-controls="navbar-default" aria-expanded="false">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 17 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M1 1h15M1 7h15M1 13h15" />
-                    </svg>
-                </button>
-                <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-                    <ul
-                        class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                        <li>
-                            <a href="/"
-                                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
-                                aria-current="page">Home</a>
-                        </li>
-                        <li>
-                            <a href="chem-housie"
-                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Chem
-                                Housie</a>
-                        </li>
-                        <li>
-                            <a href="wordsearch"
-                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Chem Word Search</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+<body>
+    <header class="nav">
+        <div class="wrap">
+            <a href="/" class="brand">Jonty<span>.</span></a>
+            <nav>
+                <ul>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-        <div class="max-w-3xl m-auto">
-            <div id="cover" class="">
-                <img src="/images/Abstract.jpg" alt="cover" class="w-full h-64 object-cover rounded-b-lg">
+    <main class="wrap">
+        <div class="cover" role="img" aria-label="Abstract cover image"></div>
+        <div class="profile">
+            <img src="/images/pic.jpg" alt="Jonty Rodrigues">
+            <div>
+                <h1>Jonty Rodrigues</h1>
+                <p>Jack of all trades</p>
             </div>
-            <!-- add profile pic -->
-            <div class="flex justify-left -mt-20 ml-8">
-                <img src="/images/pic.jpg" alt="profile"
-                    class="w-40 h-40 object-cover rounded-full border-4 border-white">
-                <div class="mt-24 ml-2">
-                    <h1 class="text-3xl font-bold text-gray-700">Jonty Rodrigues</h1>
-                    <h2 class="text-md font-semibold text-gray-600 ml-1 mt-1">Jack of all trades</h2>
-                </div>
-            </div>
-            <!-- add bio -->
-
-            <section class="mt-8 space-y-4">
-                <h2 class="text-2xl font-semibold">About</h2>
-                <p class="text-gray-600 dark:text-gray-400">
-                    Experienced Full Stack Developer with a demonstrated history of working in the computer software
-                    industry.
-                    Skilled in Laravel, Python, and Web Development.
-                    Strong engineering professional but i don't have a degree in computer science lol.
-                </p>
-            </section>
-            <section class="mt-8 space-y-4">
-                <h2 class="text-2xl font-semibold">Work Experience</h2>
-                <div class="space-y-2">
-                    <h3 class="text-xl font-medium">Project Manager</h3>
-                    <p class="text-gray-500 dark:text-gray-400">Alinetech | 2022 - Present</p>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Responsible for managing the development of various projects for clients.
-                    </p>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="text-xl font-medium">Backend Developer</h3>
-                    <p class="text-gray-500 dark:text-gray-400">Mediatrix | 2020 - 2021</p>
-                    <p class="text-gray-600 dark:text-gray-400">Worked on various projects and managed web presence.</p>
-                </div>
-            </section>
-            <section class="mt-8 space-y-4">
-                <h2 class="text-2xl font-semibold">Education</h2>
-                <div class="space-y-2">
-                    <h3 class="text-xl font-medium">Masters's Degree, Chemistry</h3>
-                    <p class="text-gray-500 dark:text-gray-400">K J Somaiya College of Science and Commerce | 2018 -
-                        2020</p>
-                </div>
-            </section>
-            <section class="mt-8 space-y-4">
-                <h2 class="text-2xl font-semibold">Skills</h2>
-                <div class="flex flex-wrap gap-2">
-                    <div
-                        class="inline-flex items-center rounded-full whitespace-nowrap border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                        Laravel
-                    </div>
-                    <div
-                        class="inline-flex items-center rounded-full whitespace-nowrap border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                        PHP
-                    </div>
-                    <div
-                        class="inline-flex items-center rounded-full whitespace-nowrap border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                        Python
-                    </div>
-                    <div
-                        class="inline-flex items-center rounded-full whitespace-nowrap border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                        Javascript
-                    </div>
-                    <div
-                        class="inline-flex items-center rounded-full whitespace-nowrap border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                        Alpine.js
-                    </div>
-                    <div
-                        class="inline-flex items-center rounded-full whitespace-nowrap border px-2.5 py-0.5 w-fit text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                        SQL
-                    </div>
-                </div>
-            </section>
-            <section class="mt-8 space-y-4">
-                <h2 class="text-2xl font-semibold">Contact</h2>
-                <div class="space-y-2">
-                    <div class="flex space-x-4">
-                        <a class="text-blue-600 dark:text-blue-400" href="https://github.com/jontyrodrigues">
-                            GitHub
-                        </a>
-                        <a class="text-blue-600 dark:text-blue-400"
-                            href="https://www.linkedin.com/in/jonty-rodrigues-967346aa/">
-                            LinkedIn
-                        </a>
-                    </div>
-                </div>
-            </section>
-
+        </div>
+        <div class="links">
+            <a class="btn" href="https://github.com/jontyrodrigues">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+                GitHub
+            </a>
+            <a class="btn" href="https://www.linkedin.com/in/jonty-rodrigues-967346aa/">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+                LinkedIn
+            </a>
         </div>
 
-        <script src='main.js'></script>
+        <section class="about">
+            <h2>About</h2>
+            <p>
+                Experienced Full Stack Developer with a demonstrated history of working in the computer software
+                industry. Skilled in Laravel, Python, and Web Development.
+                Strong engineering professional but i don't have a degree in computer science lol.
+            </p>
+        </section>
+
+        <section id="projects">
+            <h2>Projects</h2>
+            <p class="lede">Little chemistry games and tools — where the Masters in Chemistry meets the code.</p>
+            <div class="grid">
+                <a class="card" href="/chem-housie/Housie%20Ticket%20Generator.html">
+                    <div class="tile tile-1"><small>1</small>Ht</div>
+                    <span class="tag">Chem Housie</span>
+                    <h3>Housie Ticket Generator</h3>
+                    <p>Generate printable housie tickets filled with chemical symbols instead of numbers.</p>
+                    <span class="go">Open →</span>
+                </a>
+                <a class="card" href="/chem-housie/chemical%20symbol%20generator.html">
+                    <div class="tile tile-2"><small>2</small>Cs</div>
+                    <span class="tag">Chem Housie</span>
+                    <h3>Chemical Symbol Generator</h3>
+                    <p>The caller for Chem Housie — draws elements at random and keeps track of what's been called.</p>
+                    <span class="go">Open →</span>
+                </a>
+                <a class="card" href="/wordsearch/">
+                    <div class="tile tile-3"><small>3</small>Ws</div>
+                    <span class="tag">Puzzle</span>
+                    <h3>Chem Word Search</h3>
+                    <p>A word search puzzle packed with chemistry terms.</p>
+                    <span class="go">Open →</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2>Work Experience</h2>
+            <p class="lede">Where I've been building things.</p>
+            <ol class="timeline">
+                <li>
+                    <h3>Project Manager</h3>
+                    <div class="meta">Alinetech · 2022 – Present</div>
+                    <p>Responsible for managing the development of various projects for clients.</p>
+                </li>
+                <li>
+                    <h3>Backend Developer</h3>
+                    <div class="meta">Mediatrix · 2020 – 2021</div>
+                    <p>Worked on various projects and managed web presence.</p>
+                </li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Education</h2>
+            <ol class="timeline" style="margin-top: 16px;">
+                <li>
+                    <h3>Master's Degree, Chemistry</h3>
+                    <div class="meta">K J Somaiya College of Science and Commerce · 2018 – 2020</div>
+                </li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Skills</h2>
+            <ul class="chips" style="margin-top: 16px;">
+                <li>Laravel</li>
+                <li>PHP</li>
+                <li>Python</li>
+                <li>JavaScript</li>
+                <li>Alpine.js</li>
+                <li>SQL</li>
+            </ul>
+        </section>
+
+        <section id="contact">
+            <h2>Contact</h2>
+            <p class="lede">The best way to reach me is through GitHub or LinkedIn.</p>
+            <div class="links" style="margin-left: 0;">
+                <a class="btn" href="https://github.com/jontyrodrigues">GitHub</a>
+                <a class="btn" href="https://www.linkedin.com/in/jonty-rodrigues-967346aa/">LinkedIn</a>
+            </div>
+        </section>
+
+        <footer>© Jonty Rodrigues</footer>
+    </main>
 </body>
 
 </html>
